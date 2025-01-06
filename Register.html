@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register Page</title>
+    <link rel="stylesheet" href="src/css/login.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        .message {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(0, 0, 0, 0.8);
+            color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 16px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            display: none; /* Hidden by default */
+        }
+
+        .message.success {
+            border: 2px solid #28a745;
+        }
+
+        .message.error {
+            border: 2px solid #dc3545;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="register-container">
+            <h2>Register</h2>
+            <div class="loginform">
+                <div class="form-group">
+                    <label for="name">Name</label>
+                    <input type="text" id="name" placeholder="Enter your name" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" placeholder="Enter your email" required>
+                </div>
+                <div class="form-group">
+                    <label for="phonenumber">Phone Number</label>
+                    <input type="text" id="phonenumber" placeholder="Enter your phone number" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" placeholder="Enter your password" required>
+                </div>
+                <div class="form-group">
+                    <button type="button" onclick="registerUser()">Register</button>
+                </div>
+                <div class="form-group">
+                    <button id="back-btn" class="link-style">Back to main menu</button>
+                </div>
+                <div class="message" id="message"></div>
+            </div>
+            <div class="whats-auth">
+                <a href="https://itung.in.my.id/login/">Use Whatsauth</a>
+            </div>
+            <div class="forgot-password">
+                <a href="https://itung.in.my.id/login.html">Already have an account?</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Event listener untuk tombol "Back to main menu"
+        document.getElementById('back-btn').addEventListener('click', function (e) {
+            e.preventDefault(); // Mencegah default button behavior
+            window.location.href = 'index.html'; // Redirect ke halaman LP.html
+        });
+
+        // Fungsi untuk menampilkan pesan
+        function showMessage(message, type) {
+            const messageBox = document.getElementById('message');
+            messageBox.textContent = message;
+            messageBox.className = `message ${type}`;
+            messageBox.style.display = 'block';
+
+            setTimeout(() => {
+                messageBox.style.display = 'none';
+            }, 3000);
+        }
+
+        // Fungsi untuk register user
+        function registerUser() {
+            const name = document.getElementById('name').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const phone = document.getElementById('phonenumber').value.trim();
+            const password = document.getElementById('password').value.trim();
+
+            if (!name || !email || !phone || !password) {
+                showMessage('Please fill in all fields!', 'error');
+                return;
+            }
+
+            const user = { name, email, phone, password };
+
+            // Ambil data existing dari local storage
+            let users = JSON.parse(localStorage.getItem('users')) || [];
+
+            // Cek apakah email sudah terdaftar
+            const isEmailExists = users.some(u => u.email === email);
+            if (isEmailExists) {
+                showMessage('Email is already registered!', 'error');
+                return;
+            }
+
+            // Simpan user ke local storage
+            users.push(user);
+            localStorage.setItem('users', JSON.stringify(users));
+            showMessage('Registration successful!', 'success');
+
+            // Reset form
+            document.getElementById('name').value = '';
+            document.getElementById('email').value = '';
+            document.getElementById('phonenumber').value = '';
+            document.getElementById('password').value = '';
+        }
+    </script>
+</body>
+</html>
